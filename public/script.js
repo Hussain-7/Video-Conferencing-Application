@@ -1,14 +1,15 @@
 var socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-
-const peer = new Peer(undefined, {
-  path: "/peerjs",
-  host: "/",
-  port: "443",
-});
+const peer = new Peer();
+// const peer = new Peer(undefined, {
+//   path: "/peerjs",
+//   host: "/",
+//   port: "443",
+// });
 let myVideoStream;
 const myVideo = document.createElement("video");
 myVideo.muted = true;
+const peers = {};
 
 // get media input and output access from chrome
 navigator.mediaDevices
@@ -34,15 +35,26 @@ navigator.mediaDevices
   });
 
 //Frontend User
+socket.on("createMessage", (message) => {
+  let chatlist = $(".messages");
+  chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
+  scrollToBottom();
+});
 
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id);
+});
 
-  socket.on("createMessage", (message) => {
-    let chatlist = $(".messages");
-    chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
-    scrollToBottom();
-  });
+socket.on("user-disconnected", (userId) => {
+  if (peers[userId]) peers[userId].close();
+});
+
+socket.on("user-left-chat", (userId) => {
+  console.log("in user left chat");
+  if (peers[userId]) peers[userId].close();
+  window.location.replace(
+    "http://localhost:3030/335a5b77-0724-4991-8889-9b37f4c899e1"
+  );
 });
 
 const connectToNewUser = (userId, stream) => {
@@ -51,6 +63,10 @@ const connectToNewUser = (userId, stream) => {
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
+  call.on("close", () => {
+    video.remove();
+  });
+  peers[userId] = call;
 };
 
 const addVideoStream = (video, stream) => {
@@ -70,6 +86,10 @@ $("html").keydown((e) => {
     text.val("");
   }
 });
+
+const leaveChat = () => {
+  socket.emit("leave-chat");
+};
 
 const scrollToBottom = () => {
   console.log("in scroll bottom");

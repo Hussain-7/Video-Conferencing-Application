@@ -14,8 +14,15 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 // Routes
+
 app.get("/", (req, res) => {
   res.redirect(`/${uuidV4()}`);
+});
+app.get("/main", (req, res) => {
+  res.render("main");
+});
+app.get("/meeting", (req, res) => {
+  res.render("meeting");
 });
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
@@ -29,6 +36,12 @@ io.on("connection", (socket) => {
 
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message);
+    });
+    socket.on("disconnect", () => {
+      socket.to(roomId).emit("user-disconnected", userId);
+    });
+    socket.on("leave-chat", () => {
+      io.to(roomId).emit("user-left-chat", userId);
     });
   });
 });
