@@ -34,6 +34,12 @@ navigator.mediaDevices
 
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id);
+
+  socket.on("createMessage", (message) => {
+    let chatlist = $(".messages");
+    chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
+    scrollToBottom();
+  });
 });
 
 const connectToNewUser = (userId, stream) => {
@@ -50,4 +56,20 @@ const addVideoStream = (video, stream) => {
     video.play();
   });
   videoGrid.append(video);
+};
+
+let text = $("input");
+
+$("html").keydown((e) => {
+  if (e.which == 13 && text.val().length !== 0) {
+    socket.emit("message", text.val());
+    console.log(text.val());
+    text.val("");
+  }
+});
+
+const scrollToBottom = () => {
+  console.log("in scroll bottom");
+  let d = $(".main__chat_window");
+  d.scrollTop(d.prop("scrollHeight"));
 };
