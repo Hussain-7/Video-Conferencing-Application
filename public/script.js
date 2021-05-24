@@ -1,16 +1,16 @@
+const users = [];
 var socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-const peer = new Peer();
-// const peer = new Peer(undefined, {
-//   path: "/peerjs",
-//   host: "/",
-//   port: "443",
-// });
+// const peer = new Peer();
+const peer = new Peer(undefined, {
+  host: "/",
+  port: "9000",
+});
 let myVideoStream;
 const myVideo = document.createElement("video");
 myVideo.muted = true;
 const peers = {};
-
+let leaveChat = () => {};
 // get media input and output access from chrome
 navigator.mediaDevices
   .getUserMedia({
@@ -20,9 +20,9 @@ navigator.mediaDevices
   .then((stream) => {
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
-
+    console.log("after adding my stream");
     peer.on("call", (call) => {
-      console.log("Answering Call");
+      alert("Accept call");
       call.answer(stream);
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
@@ -30,6 +30,7 @@ navigator.mediaDevices
       });
     });
     socket.on("user-connected", (userId) => {
+      console.log("Listenning for user Connected");
       connectToNewUser(userId, stream);
     });
   });
@@ -42,25 +43,39 @@ socket.on("createMessage", (message) => {
 });
 
 peer.on("open", (id) => {
+  console.log("my user id is : ", id);
   socket.emit("join-room", ROOM_ID, id);
+  leaveChat = () => {
+    const index = users.findIndex((user) => user.userId === id);
+    if (index !== -1) {
+      return users.splice(index, 1)[0];
+    }
+  };
 });
 
 socket.on("user-disconnected", (userId) => {
   if (peers[userId]) peers[userId].close();
 });
 
-socket.on("user-left-chat", (userId) => {
+socket.on("leaveChat", (id) => {
+  alert("hello");
   console.log("in user left chat");
-  if (peers[userId]) peers[userId].close();
-  window.location.replace(
-    "http://localhost:3030/335a5b77-0724-4991-8889-9b37f4c899e1"
-  );
+  console.log(id);
+  // if (peers[userId]) peers[userId].close();
+  // window.location.replace("http://www.google.com");
 });
 
 const connectToNewUser = (userId, stream) => {
+  console.log("in connect to new User Function");
+  console.log("useriD TO whom calling : ", userId);
   const call = peer.call(userId, stream);
+  console.log(call);
   const video = document.createElement("video");
+  const user = { userId, ROOM_ID };
+  users.push(user);
+  console.log(users);
   call.on("stream", (userVideoStream) => {
+    console.log("on stream function ");
     addVideoStream(video, userVideoStream);
   });
   call.on("close", () => {
@@ -75,6 +90,18 @@ const addVideoStream = (video, stream) => {
     video.play();
   });
   videoGrid.append(video);
+  let totalUsers = document.getElementsByTagName("video").length;
+  let count = totalUsers;
+  if (totalUsers > 1) {
+    if (totalUsers > 1 && totalUsers < 7) count = 3;
+    if (totalUsers > 6 && totalUsers < 9) count = 4;
+    if (totalUsers > 8 && totalUsers < 11) count = 5;
+    if (totalUsers > 10) count = 6;
+    for (let index = 0; index < totalUsers; index++) {
+      document.getElementsByTagName("video")[index].style.width =
+        100 / count + "%";
+    }
+  }
 };
 
 let text = $("input");
@@ -86,10 +113,6 @@ $("html").keydown((e) => {
     text.val("");
   }
 });
-
-const leaveChat = () => {
-  socket.emit("leave-chat");
-};
 
 const scrollToBottom = () => {
   console.log("in scroll bottom");

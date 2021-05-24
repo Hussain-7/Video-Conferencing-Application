@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
-const server = require("http").Server(app);
-const io = require("socket.io")(server);
+// const cors = require("cors");
+// app.use(cors());
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
@@ -18,32 +20,23 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.redirect(`/${uuidV4()}`);
 });
-app.get("/main", (req, res) => {
-  res.render("main");
-});
-app.get("/meeting", (req, res) => {
-  res.render("meeting");
-});
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
-//Backend User
+// Backend User
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {
+    console.log(roomId, userId);
     socket.join(roomId);
     socket.to(roomId).emit("user-connected", userId);
-
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message);
     });
     socket.on("disconnect", () => {
       socket.to(roomId).emit("user-disconnected", userId);
     });
-    socket.on("leave-chat", () => {
-      io.to(roomId).emit("user-left-chat", userId);
-    });
   });
 });
 
-server.listen(process.env.PORT || 3030);
+server.listen(process.env.PORT || 3000);

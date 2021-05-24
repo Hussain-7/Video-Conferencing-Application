@@ -109,9 +109,6 @@ width: calc(100% + 2px) !important;
 </head>
 <body class="    " data-cd=".zoom.us">
 <div class="total-main-content">
-<div id="skiptocontent">
-<a role="complementary" aria-label="skip" href="#the-main-content">Skip to main content</a>
-</div>
 <div id="header_container" class="   ">
 <div id="header_outer" class="container clearfix  ">
 <div id="header" class="navbar navbar-default navbar-fixed-top">
@@ -123,10 +120,10 @@ width: calc(100% + 2px) !important;
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 </button>
-<ul class="list-inline pull-right visible-xs" style="line-height: 50px;">
+<!-- <ul class="list-inline pull-right visible-xs" style="line-height: 50px;">
 <li style="padding-right: 15px;"><a href="https://zoom.us/join" target="_blank">JOIN</a></li>
 <li style="padding-right: 15px;"><a id="mobile-host-btn" href="/start/videomeeting" target="_blank">HOST</a></li>
-</ul>
+</ul> -->
 <div class="left">
 <a class="imglink" href="https://zoom.us/">
 <img class="logo" src="https://st1.zoom.us/static/94185/image/new/ZoomLogo.png" alt="Zoom Logo"/>
@@ -135,7 +132,7 @@ width: calc(100% + 2px) !important;
 </div>
 <div>
 <div class="navbar-collapse collapse" id="navbar">
-<ul class="nav navbar-nav navbar-right" role="navigation" aria-label="meetings">
+<!-- <ul class="nav navbar-nav navbar-right" role="navigation" aria-label="meetings">
 <li role="none"><a role="menuitem" id="btnJoinMeeting" tracking-id="headerMenuJoin" tracking-category="NavHeader" class="hidden-xs" href="https://zoom.us/join" class="joinameeting light" onClick="ga('send', 'event', 'product', 'click-nav-joinmeeting', 'Header Nav Join a Meeting');">JOIN A MEETING</a></li>
 <li role="none">
 <div id="dropdown-hostmeeting" class="dropdown hidden-xs" aria-haspopup="true">
@@ -168,19 +165,19 @@ Screen Share Only</a>
 <li role="none"><a role="menuitem" href="tel:1.888.799.9666" class="support-phone" onClick="ga('send', 'event', 'contact', 'click-homepage-phone-number', 'Click Homepage Phone Number');"><span class="mobile-phone"></span>1.888.799.9666</a></li>
 </ul>
 </li>
-</ul>
+</ul> -->
 </div>
 </div>
 </div>
 </div>
 <div id="header_login" class="hideme">
-<ul>
+<!-- <ul>
 <li class="visible-xs divider" role="presentation"></li>
 <li class="signin"><a class="link" href="https://zoom.us/signin" onClick="ga('send', 'event', 'product', 'click-nav-signin', 'Header Nav Sign In');">SIGN IN</a></li>
 <li class="visible-xs divider" role="presentation"></li>
 <li><div id="signupfree" class="hidden-xs"><a class="btn cta-bgyellow signupfree" role="button" href="https://zoom.us/signup" onClick="ga('send', 'event', 'freesignup', 'click-nav-signupfree', 'Header Nav Sign up Free');">SIGN UP, IT'S FREE</a></div></li>
 <li><a class="visible-xs" href="https://zoom.us/signup" onClick="ga('send', 'event', 'freesignup', 'click-nav-signupfree', 'Header Nav Sign up Free');">SIGN UP, IT'S FREE</a></li>
-</ul>
+</ul> -->
 </div>
 </div>
 </div>
@@ -211,14 +208,25 @@ Screen Share Only</a>
 </div>
 <div class="form-group" style="margin-bottom: 72px">
 <div class="controls wc-new-syle">
-<a id="btnSubmit" role="button" style="height: 56px; line-height: 44px; width: 100%;background-color: rgba(82, 82, 128, 0.09);opacity: 1;" href="javascript:;" class="btn btn-primary user submit">Join</a>
+<a href="/" role="button" style="height: 56px;
+line-height: 44px;
+width: 100%;
+background-color: rgb(14, 113, 235);
+opacity: 1;
+border-color: rgb(14, 113, 235);
+color: rgb(255, 255, 255);
+height: 40px !important;
+font-size: 16px;
+line-height: 31px !important;
+border-radius: 12px;
+padding: 5px 16px;
+display: inline-block;  margin-bottom: 0;
+text-align: center;
+white-space: nowrap;
+opacity: 1;"  >Join</a>
 </div>
 </div>
-<div class="form-group">
-<div class="controls wc-new-syle">
-<a id="btnRoomSystemJoin" class="doc" href="https://zoom.us/meeting/rooms">Join a meeting from an H.323/SIP room system</a>
-</div>
-</div>
+
 </form>
 </div>
 </div>
@@ -388,31 +396,7 @@ margin: 10px 10px 10px 10px !important;
 <script nonce="Pht1ARdNSMGDxyDZZN3Ymg" id="__ada" data-handle="zoom" src="https://static.ada.support/embed.js"></script>
 <!--[if gt IE 8]><!-->
 <!--<![endif]-->
-<div id="upcomingMeetingDialog" class="modaldialog hideme upcomingMeeting-feature-dialog">
-<input type="hidden" name="mtg_length" id="mtg_length">
-<input type="hidden" name="mtg_length1" id="mtg_length1">
-<input type="hidden" name="start_url" id="start_url">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header clearfix">
-<button class="close simplemodal-close" aria-label="close">&times;</button>
-<h4 tabindex="-1" id="upcoming-meeting-title" class="meeting-delete-header-font" style="display: inline-block;">Upcoming Meetings</h4>
-</div>
-<div class="modal-body">
-<div class="form-group" style="margin-bottom:16px;">
-<div id="one-mtg" class="controls hideme" style="margin-bottom:18px;">Would you like to start this meeting?</div>
-<div id="more-mtg" class="controls hideme" style="margin-bottom:18px;">Would you like to start one of these meetings?</div>
-<div id="mtgs">
-</div>
-<div id="viwe-more" class="controls hideme"><a href="/meeting">View more...</a></div>
-</div>
-</div>
-<div class="modal-footer">
-<button class="btn btn-primary submit" id="scheduleMtg" style="background-color: #fff;color: #232333;border-color: #747487">Start a New Meeting</button>
-</div>
-</div>
-</div>
-</div>
+
 <link rel="stylesheet" type="text/css" href="https://st3.zoom.us/static/94185/css/meetings/meeting_delete_dialog.min.css" /><script nonce="Pht1ARdNSMGDxyDZZN3Ymg" type="text/javascript">
 /*Past Due Invoice Message*/
 var cookieLang = $.cookie('_zm_lang');
