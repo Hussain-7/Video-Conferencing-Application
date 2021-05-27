@@ -16,8 +16,12 @@ app.use(express.static("public"));
 // Routes
 
 app.get("/", (req, res) => {
-  res.redirect(`/${uuidV4()}`);
+  // res.redirect(`/${uuidV4()}`);
+  res.render("landingPage");
 });
+app.get("/registerPage", (req, res)=> {
+  res.render("registerPage");
+})
 app.get("/main", (req, res) => {
   res.render("main");
 });
