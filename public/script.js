@@ -1,11 +1,14 @@
 const users = [];
-var socket = io("/");
+var socket = io.connect("/");
 const videoGrid = document.getElementById("video-grid");
 // const peer = new Peer();
-const peer = new Peer(undefined, {
-  host: "/",
-  port: "9000",
-});
+// const peer = new Peer({
+//   path: "/",
+//   host: "/",
+//   port: "443",
+// });
+var peer = new Peer();
+
 let myVideoStream;
 const myVideo = document.createElement("video");
 myVideo.muted = true;
@@ -22,7 +25,6 @@ navigator.mediaDevices
     addVideoStream(myVideo, stream);
     console.log("after adding my stream");
     peer.on("call", (call) => {
-      alert("Accept call");
       call.answer(stream);
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
@@ -35,6 +37,10 @@ navigator.mediaDevices
     });
   });
 
+// socket.on("user-connected", (userId) => {
+//   console.log("Listenning for user Connected");
+//   connectToNewUser(userId, stream);
+// });
 //Frontend User
 socket.on("createMessage", (message) => {
   let chatlist = $(".messages");
@@ -43,7 +49,7 @@ socket.on("createMessage", (message) => {
 });
 
 peer.on("open", (id) => {
-  console.log("my user id is : ", id);
+  console.log("My id is : ", id);
   socket.emit("join-room", ROOM_ID, id);
   leaveChat = () => {
     const index = users.findIndex((user) => user.userId === id);
@@ -69,7 +75,6 @@ const connectToNewUser = (userId, stream) => {
   console.log("in connect to new User Function");
   console.log("useriD TO whom calling : ", userId);
   const call = peer.call(userId, stream);
-  console.log(call);
   const video = document.createElement("video");
   const user = { userId, ROOM_ID };
   users.push(user);
