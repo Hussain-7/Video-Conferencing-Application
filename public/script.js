@@ -76,14 +76,17 @@ const addVideoStream = (video, stream) => {
   videoGrid.append(video);
   let totalUsers = document.getElementsByTagName("video").length;
   let count = totalUsers;
-  if (totalUsers > 1) {
-    if (totalUsers > 1 && totalUsers < 7) count = 3;
-    if (totalUsers > 6 && totalUsers < 9) count = 4;
-    if (totalUsers > 8 && totalUsers < 11) count = 5;
-    if (totalUsers > 10) count = 6;
-    for (let index = 0; index < totalUsers; index++) {
+  if (totalUsers > 1 && totalUsers < 7) count = 3;
+  // if (totalUsers > 6 && totalUsers < 9) count = 4;
+  // if (totalUsers > 8 && totalUsers < 11) count = 5;
+  if (totalUsers > 10) count = 6;
+  for (let index = 0; index < totalUsers; index++) {
+    if (totalUsers == 1) {
+      document.getElementsByTagName("video")[0].style.width = "50%";
+    } else {
       document.getElementsByTagName("video")[index].style.width =
         100 / count + "%";
+      console.log(100 / count);
     }
   }
 };
@@ -159,3 +162,18 @@ const setPlayVideo = () => {
   `;
   document.querySelector(".main__video_button").innerHTML = html;
 };
+
+function openChat() {
+  console.log($(window).innerWidth());
+  document.getElementById("chat__container").style.width = "20%";
+  document.getElementById("videoChatContainer").style.width = "80%";
+  document.getElementById("chat__container").style.display = "flex";
+  document.getElementById("closebtn").style.display = "block";
+}
+
+function closeChat() {
+  document.getElementById("chat__container").style.width = "0%";
+  document.getElementById("videoChatContainer").style.width = "100%";
+  document.getElementById("chat__container").style.display = "none";
+  document.getElementById("closebtn").style.display = "none";
+}
