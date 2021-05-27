@@ -1,12 +1,6 @@
 const users = [];
 var socket = io.connect("/");
 const videoGrid = document.getElementById("video-grid");
-// const peer = new Peer();
-// const peer = new Peer({
-//   path: "/",
-//   host: "/",
-//   port: "443",
-// });
 var peer = new Peer();
 
 let myVideoStream;
@@ -23,7 +17,6 @@ navigator.mediaDevices
   .then((stream) => {
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
-    console.log("after adding my stream");
     peer.on("call", (call) => {
       call.answer(stream);
       const video = document.createElement("video");
@@ -35,21 +28,14 @@ navigator.mediaDevices
       console.log("Listenning for user Connected");
       connectToNewUser(userId, stream);
     });
+    socket.on("createMessage", (message) => {
+      let chatlist = $(".messages");
+      chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
+      scrollToBottom();
+    });
   });
 
-// socket.on("user-connected", (userId) => {
-//   console.log("Listenning for user Connected");
-//   connectToNewUser(userId, stream);
-// });
-//Frontend User
-socket.on("createMessage", (message) => {
-  let chatlist = $(".messages");
-  chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
-  scrollToBottom();
-});
-
 peer.on("open", (id) => {
-  console.log("My id is : ", id);
   socket.emit("join-room", ROOM_ID, id);
   leaveChat = () => {
     const index = users.findIndex((user) => user.userId === id);
@@ -64,23 +50,16 @@ socket.on("user-disconnected", (userId) => {
 });
 
 socket.on("leaveChat", (id) => {
-  alert("hello");
   console.log("in user left chat");
-  console.log(id);
-  // if (peers[userId]) peers[userId].close();
-  // window.location.replace("http://www.google.com");
 });
 
 const connectToNewUser = (userId, stream) => {
-  console.log("in connect to new User Function");
-  console.log("useriD TO whom calling : ", userId);
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   const user = { userId, ROOM_ID };
   users.push(user);
   console.log(users);
   call.on("stream", (userVideoStream) => {
-    console.log("on stream function ");
     addVideoStream(video, userVideoStream);
   });
   call.on("close", () => {
@@ -110,7 +89,6 @@ const addVideoStream = (video, stream) => {
 };
 
 let text = $("input");
-
 $("html").keydown((e) => {
   if (e.which == 13 && text.val().length !== 0) {
     socket.emit("message", text.val());
