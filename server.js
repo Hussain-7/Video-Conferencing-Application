@@ -19,6 +19,10 @@ app.get("/", (req, res) => {
   // res.redirect(`/${uuidV4()}`);
   res.render("landingPage");
 });
+app.get("/main", (req, res) => {
+  // res.redirect(`/${uuidV4()}`);
+  res.render("mainPage");
+});
 app.get("/registerPage", (req, res)=> {
   res.render("registerPage");
 })
