@@ -1,5 +1,6 @@
 const users = [];
 var socket = io.connect("/");
+console.log(socket);
 const videoGrid = document.getElementById("video-grid");
 var peer = new Peer();
 
