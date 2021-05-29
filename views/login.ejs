@@ -21,20 +21,39 @@
   <body class="landingPage__main">
     <div class="login__form">
       <p class="sign" align="center">Sign in</p>
-      <form class="form1">
-        <input class="un" type="text" align="center" placeholder="Username" />
+      <form class="form1" action="/login" method="POST">
         <input
+          class="un"
+          type="email"
+          align="center"
+          placeholder="Email"
+          name="email"
+          required
+          validation="required"
+        />
+        <input
+          id="login__password"
           class="pass"
           type="password"
           align="center"
           placeholder="Password"
+          name="password"
+          required
+          min="7"
         />
-        <button class="submit" align="center">Sign in</button>
+        <% if(messages && messages.error){%>
+        <div class="validation-error-messages"><%= messages.error%></div>
+        <%}%>
+
+        <button id="login__submit" class="submit" align="center">
+          Sign in
+        </button>
+
         <!-- <hr style="border: 1px solid #e0e1e2; margin-top: 20px" /> -->
         <div class="button-container">
-          <!-- <a style="display: block; color: black" href="/register"
+          <a style="display: block; color: black" href="/register"
             >Create a new account</a
-          > -->
+          >
           <div class="linebreak"><span>Or</span></div>
 
           <a href="/google" class="google-btn">

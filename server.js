@@ -1,29 +1,41 @@
-const express = require("express");
-const app = express();
+let express = require("express"),
+  app = express(),
+  server = require("http").Server(app),
+  io = require("socket.io")(server),
+  { ExpressPeerServer } = require("peer"),
+  peerServer = ExpressPeerServer(server, {
+    debug: true,
+  });
+(cors = require("cors")),
+  (bodyParser = require("body-parser")),
+  (passport = require("passport")),
+  (session = require("express-session"));
+(googleAuthRoutes = require("./routes/auth/userGoogleAuth")),
+  (authRoutes = require("./routes/auth/userAuth")),
+  (mainRoutes = require("./routes/mainApp/main")),
+  (LocalStrategy = require("passport-local")),
+  (User = require("./models/user")),
+  (flash = require("express-flash")),
+  ((methodOverride = require("method-override")),
+  (mongoose = require("mongoose")));
 
-var server = require("http").Server(app);
-var io = require("socket.io")(server);
-const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(server, {
-  debug: true,
-});
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const passport = require("passport");
-const cookieSession = require("cookie-session");
-const { isLoggedIn } = require("./auth/middleware");
-require("./auth/passportSetup");
+require("dotenv").config();
+let mongoURI = process.env.MONGODBURI;
+mongoose.connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
 
-const { v4: uuidV4 } = require("uuid");
+const initializePassport = require("./middleware/passport-config");
+initializePassport(passport);
 
 // configrations
 app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.json());
+app.use(flash());
 app.use(
-  cookieSession({
-    name: "zoom-session",
-    keys: ["key1", "key2"],
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,45 +44,17 @@ app.use("/peerjs", peerServer);
 app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride("_method"));
 
-// Routes
-app.get("/", (req, res) => {
-  res.render("login");
-});
-app.get("/register", (req, res) => {
-  res.render("register");
-});
+//Routes
+app.use(authRoutes);
+app.use(googleAuthRoutes);
+app.use(mainRoutes);
 
-//Google Auth Routes
-app.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/dashboard");
-  }
-);
-
-app.get("/dashboard", (req, res) => {
-  res.redirect(`/meeting/${uuidV4()}`);
-});
-app.get("/meeting/:meetingId", isLoggedIn, (req, res) => {
-  console.log(req.user);
-  res.render("room", {
-    roomId: req.params.meetingId,
-    name: req.user.displayName,
-  });
-});
-app.get("/logout", (req, res) => {
-  req.session = null;
-  req.logout();
+app.get("/:wrong-path", function (req, res) {
   res.redirect("/");
 });
+
 // Backend User
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {

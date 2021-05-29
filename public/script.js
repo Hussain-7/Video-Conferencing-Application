@@ -1,6 +1,8 @@
 const users = [];
+console.log(ROOM_ID);
+console.log(Name);
+console.log(Email);
 var socket = io.connect("/");
-console.log(socket);
 const videoGrid = document.getElementById("video-grid");
 var peer = new Peer();
 
@@ -31,7 +33,7 @@ navigator.mediaDevices
     });
     socket.on("createMessage", (message) => {
       let chatlist = $(".messages");
-      chatlist.append(`<li class="message"><b>username : </b>${message}</li>`);
+      chatlist.append(`<li class="message"><b>${Name} : </b>${message}</li>`);
       scrollToBottom();
     });
   });
@@ -86,7 +88,7 @@ const addVideoStream = (video, stream) => {
       document.getElementsByTagName("video")[0].style.width = "50%";
     } else {
       document.getElementsByTagName("video")[index].style.width =
-        100 / count + "%";
+        (100 - count * 2) / count + "%";
       console.log(100 / count);
     }
   }

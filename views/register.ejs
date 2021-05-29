@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
-    <link rel="stylesheet" href="/public/style.css" />
+    <link rel="stylesheet" href="/style.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Ubuntu"
       rel="stylesheet"
@@ -14,14 +14,40 @@
   <body>
     <div class="login__form">
       <p class="sign" align="center">Sign up</p>
-      <form class="form1">
-        <input class="un" type="text" align="center" placeholder="Username" />
-        <input class="un" type="text" align="center" placeholder="Email" />
+      <form class="form1" action="/register" method="POST">
+        <input
+          class="un"
+          type="text"
+          align="center"
+          placeholder="Name"
+          name="name"
+          required
+        />
+        <input
+          class="un"
+          type="text"
+          align="center"
+          placeholder="Username"
+          name="username"
+          required
+        />
+        <input
+          class="un"
+          type="email"
+          align="center"
+          placeholder="Email"
+          name="email"
+          required
+          validation="required"
+        />
         <input
           class="pass"
           type="password"
           align="center"
           placeholder="Password"
+          name="password"
+          required
+          min="7"
         />
         <button class="submit" align="center">Sign up</button>
         <hr style="border: 1px solid #e0e1e2; margin-top: 20px" />
@@ -33,7 +59,7 @@
             color: black;
             padding-bottom: 20px;
           "
-          href="/"
+          href="/login"
           >Already have an account? Click to log in!</a
         >
       </form>

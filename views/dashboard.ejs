@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Conferencing</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <div class="app__left">
+        <form
+          style="text-align: right"
+          action="/logout?_method=DELETE"
+          method="POST"
+        >
+          <button type="submit">logout</button>
+        </form>
+        <h3>Premium Video Conferencing. Now For Everyone!</h3>
+        <p>
+          We re-engineered the service we built for secure business meetings, to
+          make it free for everyone!
+        </p>
+        <div class="dash-item-container">
+          <button id="newRoom" onclick="createMeatingId()" class="newRoom">
+            Generate new Meeting Id
+          </button>
+          <div id="inputdashboard">
+            <input class="form-input" type="text" id="roomName" />
+            <button
+              id="joinRoom"
+              class="pulse"
+              onclick="{window.location.href = '/meeting/' + document.getElementById('roomName').value}"
+            >
+              Join
+            </button>
+          </div>
+          <button id="copy" onclick="copy()" class="newRoom">
+            Copy Meeting Id
+          </button>
+        </div>
+
+        <!-- </form> -->
+      </div>
+      <div class="app__right">
+        <img
+          src="./img/user_edu_get_a_link_light_90698cd7b4ca04d3005c962a3756c42d.svg"
+        />
+      </div>
+    </div>
+  </body>
+  <script>
+    function generateUUID() {
+      // Public Domain/MIT
+      var d = new Date().getTime(); //Timestamp
+      var d2 =
+        (performance && performance.now && performance.now() * 1000) || 0; //Time in microseconds since page-load or 0 if unsupported
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          var r = Math.random() * 16; //random number between 0 and 16
+          if (d > 0) {
+            //Use timestamp until depleted
+            r = (d + r) % 16 | 0;
+            d = Math.floor(d / 16);
+          } else {
+            //Use microseconds since page-load if supported
+            r = (d2 + r) % 16 | 0;
+            d2 = Math.floor(d2 / 16);
+          }
+          return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        }
+      );
+    }
+    function createMeatingId() {
+      document.getElementById("roomName").value = generateUUID();
+    }
+    function copy() {
+      /* Get the text field */
+      var copyText = document.getElementById("roomName");
+
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+      /* Copy the text inside the text field */
+      document.execCommand("copy");
+
+      /* Alert the copied text */
+    }
+  </script>
+</html>
