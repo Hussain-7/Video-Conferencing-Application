@@ -1,4 +1,5 @@
 const users = [];
+const currentName = Name;
 console.log(ROOM_ID);
 console.log(Name);
 console.log(Email);
@@ -7,7 +8,11 @@ const videoGrid = document.getElementById("video-grid");
 var peer = new Peer();
 
 let myVideoStream;
+
 const myVideo = document.createElement("video");
+const videoContainer = document.createElement("div");
+const span = document.createElement("span");
+
 myVideo.muted = true;
 const peers = {};
 let leaveChat = () => {};
@@ -19,12 +24,15 @@ navigator.mediaDevices
   })
   .then((stream) => {
     myVideoStream = stream;
-    addVideoStream(myVideo, stream);
+    addVideoStream(span, myVideo, videoContainer, stream);
     peer.on("call", (call) => {
       call.answer(stream);
       const video = document.createElement("video");
+      const uservideoContainer = document.createElement("div");
+      const userspan = document.createElement("span");
+
       call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
+        addVideoStream(userspan, video, uservideoContainer, userVideoStream);
       });
     });
     socket.on("user-connected", (userId) => {
@@ -59,25 +67,31 @@ socket.on("leaveChat", (id) => {
 const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
+  const videoContainer = document.createElement("div");
+  const span = document.createElement("span");
+
   const user = { userId, ROOM_ID };
   users.push(user);
   console.log(users);
   call.on("stream", (userVideoStream) => {
-    addVideoStream(video, userVideoStream);
+    addVideoStream(span, video, videoContainer, userVideoStream);
   });
   call.on("close", () => {
-    video.remove();
+    videoContainer.remove();
   });
   peers[userId] = call;
 };
 
-const addVideoStream = (video, stream) => {
+const addVideoStream = (span, video, videoContainer, stream) => {
+  console.log("in add video stream!!");
   video.srcObject = stream;
+
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
-  videoGrid.append(video);
-  let totalUsers = document.getElementsByTagName("video").length;
+  createVideoContainer(span, video, videoContainer);
+  let totalUsers = document.getElementsByClassName("video-container").length;
+  console.log(totalUsers);
   let count = totalUsers;
   if (totalUsers > 1 && totalUsers < 7) count = 3;
   // if (totalUsers > 6 && totalUsers < 9) count = 4;
@@ -85,13 +99,22 @@ const addVideoStream = (video, stream) => {
   if (totalUsers > 10) count = 6;
   for (let index = 0; index < totalUsers; index++) {
     if (totalUsers == 1) {
-      document.getElementsByTagName("video")[0].style.width = "50%";
+      document.getElementsByClassName("video-container")[0].style.width = "50%";
     } else {
-      document.getElementsByTagName("video")[index].style.width =
+      document.getElementsByClassName("video-container")[index].style.width =
         (100 - count * 2) / count + "%";
       console.log(100 / count);
     }
   }
+};
+
+const createVideoContainer = (span, video, videoContainer) => {
+  span.innerHTML = Name;
+  span.classList.add("videofooter");
+  videoContainer.append(span);
+  videoContainer.classList.add("video-container");
+  videoContainer.append(video);
+  videoGrid.append(videoContainer);
 };
 
 let text = $("input");

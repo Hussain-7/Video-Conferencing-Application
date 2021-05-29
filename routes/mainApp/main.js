@@ -15,9 +15,9 @@ router.get("/meeting/:meetingId", isLoggedIn, (req, res) => {
   console.log(req.user);
   res.render("room", {
     roomId: req.params.meetingId,
-    name: req.user.displayName ? req.user.displayName : req.user.name,
-    email: req.user.email,
-    picture: req.user.picture,
+    name: req.user?.displayName ? req.user.displayName : req.user?.name,
+    email: req.user?.email,
+    picture: req.user?.picture,
   });
 });
 
