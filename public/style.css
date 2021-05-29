@@ -180,7 +180,7 @@ video {
   font-size: 25px;
 }
 @media screen and (max-width: 1200px) {
-  video {
+  .video-container {
     height: 25% !important;
     width: 50% !important;
   }
@@ -205,23 +205,34 @@ video {
   #videoChatContainer {
     width: fit-content;
     height: fit-content;
-    position: relative;
     width: 100%;
   }
   #closebtn {
     width: 0;
   }
-  video {
-    height: 25% !important;
-    width: 50% !important;
+  .video-container {
+    height: 50% !important;
+    width: 100% !important;
   }
 }
 @media screen and (max-width: 450px) {
+  #video-grid {
+    max-height: 95%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    padding-bottom: 0px;
+  }
   .main__videos {
     /* overflow: scroll; */
     padding-top: 0px;
   }
-  video {
+  #videoChatContainer {
+    height: 100%;
+    width: 100%;
+  }
+  .video-container {
     height: 25% !important;
     width: 100% !important;
   }
@@ -233,6 +244,15 @@ video {
   }
   .main__controls {
     font-size: 17px !important;
+  }
+  #chat__container {
+    width: 100% !important;
+    display: none;
+    position: absolute;
+    height: 100%;
+  }
+  .main__right .closebtn {
+    margin-right: 15px;
   }
 }
 
