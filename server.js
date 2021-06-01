@@ -18,7 +18,13 @@ let express = require("express"),
   (flash = require("express-flash")),
   ((methodOverride = require("method-override")),
   (mongoose = require("mongoose")));
-
+formatMessage = require("./utils/messages");
+const {
+  userJoin,
+  getCurrentUser,
+  userLeave,
+  getRoomUsers,
+} = require("./utils/users");
 require("dotenv").config();
 let mongoURI = process.env.MONGODBURI;
 mongoose.connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
@@ -57,16 +63,36 @@ app.get("/:wrong-path", function (req, res) {
 
 // Backend User
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId) => {
-    socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-connected", userId);
+  socket.on("join-room", (peerId, RoomId, Name, Email, Picture) => {
+    const user = userJoin(socket.id, peerId, RoomId, Name, Email, Picture);
+    socket.join(user.roomId);
+    socket.broadcast.to(user.roomId).emit("user-connected", user.peerId);
     // messages
     socket.on("message", (message) => {
       //send message to the same room
-      io.to(roomId).emit("createMessage", message);
+      const user = getCurrentUser(socket.id, true);
+      io.to(user.roomId).emit(
+        "createMessage",
+        formatMessage(user.name, message)
+      );
+    });
+
+    socket.on("getInfo", (check, Id, socketid) => {
+      console.log("===============Getting Info=========");
+      let user = {};
+      if (!check) {
+        user = getCurrentUser(Id, check);
+      } else {
+        user = getCurrentUser(socket.id, true);
+      }
+      console.log(user);
+      console.log(socket.id);
+      console.log(socketid);
+      console.log("===============End Getting Info=========");
+      io.to(socketid).emit("recieveInfo", user.name, user.profile);
     });
     socket.on("disconnect", () => {
-      socket.broadcast.to(roomId).emit("user-disconnected", userId);
+      socket.broadcast.to(user.roomId).emit("user-disconnected", user.peerId);
     });
   });
 });

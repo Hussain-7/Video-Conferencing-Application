@@ -22,7 +22,6 @@ router.post("/register", async (req, res) => {
   try {
     const alreadyExistingUser = await User.findOne({ email: req.body.email });
     if (alreadyExistingUser) return res.redirect("/register");
-    console.log(alreadyExistingUser);
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     delete req.body["password"];
     const user = await User.create({

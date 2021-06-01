@@ -8,13 +8,12 @@ router.get("/", (req, res) => {
 });
 
 router.get("/dashboard", isLoggedIn, (req, res) => {
-  res.render("dashboard", { uuid: uuidV4 });
-  // res.redirect(`/meeting/${uuidV4()}`);
+  res.render("dashboard");
 });
 router.get("/meeting/:meetingId", isLoggedIn, (req, res) => {
-  console.log(req.user);
   res.render("room", {
     roomId: req.params.meetingId,
+    // id: req.user?.id ? req.user.id : req.user._id,
     name: req.user?.displayName ? req.user.displayName : req.user?.name,
     email: req.user?.email,
     picture: req.user?.picture,

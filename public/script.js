@@ -1,8 +1,3 @@
-const users = [];
-const currentName = Name;
-console.log(ROOM_ID);
-console.log(Name);
-console.log(Email);
 var socket = io.connect("/");
 const videoGrid = document.getElementById("video-grid");
 var peer = new Peer();
@@ -24,15 +19,27 @@ navigator.mediaDevices
   })
   .then((stream) => {
     myVideoStream = stream;
-    addVideoStream(span, myVideo, videoContainer, stream);
+    console.log("=======Add video Stream 1=============");
+    addVideoStream(true, socket.id, span, myVideo, videoContainer, stream);
+    console.log("printing(own SocketId):" + socket.id);
     peer.on("call", (call) => {
+      console.log(call);
       call.answer(stream);
       const video = document.createElement("video");
       const uservideoContainer = document.createElement("div");
       const userspan = document.createElement("span");
 
       call.on("stream", (userVideoStream) => {
-        addVideoStream(userspan, video, uservideoContainer, userVideoStream);
+        console.log("=======Add video Stream 2=============");
+        console.log("printing(peerId):" + call.peer);
+        addVideoStream(
+          false,
+          call.peer,
+          userspan,
+          video,
+          uservideoContainer,
+          userVideoStream
+        );
       });
     });
     socket.on("user-connected", (userId) => {
@@ -41,19 +48,14 @@ navigator.mediaDevices
     });
     socket.on("createMessage", (message) => {
       let chatlist = $(".messages");
-      chatlist.append(`<li class="message"><b>${Name} : </b>${message}</li>`);
+      chatlist.append(
+        `<li class="message"><b>${message.name} : </b>${message.text} - ${message.time}</li>`
+      );
       scrollToBottom();
     });
   });
-
 peer.on("open", (id) => {
-  socket.emit("join-room", ROOM_ID, id);
-  leaveChat = () => {
-    const index = users.findIndex((user) => user.userId === id);
-    if (index !== -1) {
-      return users.splice(index, 1)[0];
-    }
-  };
+  socket.emit("join-room", id, RoomId, Name, Email, Picture);
 });
 
 socket.on("user-disconnected", (userId) => {
@@ -70,52 +72,59 @@ const connectToNewUser = (userId, stream) => {
   const videoContainer = document.createElement("div");
   const span = document.createElement("span");
 
-  const user = { userId, ROOM_ID };
-  users.push(user);
-  console.log(users);
   call.on("stream", (userVideoStream) => {
-    addVideoStream(span, video, videoContainer, userVideoStream);
+    console.log("=======Add video Stream 3=============");
+    console.log("printing(peerId):" + userId);
+    addVideoStream(false, userId, span, video, videoContainer, userVideoStream);
   });
   call.on("close", () => {
     videoContainer.remove();
   });
+
   peers[userId] = call;
 };
 
-const addVideoStream = (span, video, videoContainer, stream) => {
+const addVideoStream = (check, id, span, video, videoContainer, stream) => {
   console.log("in add video stream!!");
   video.srcObject = stream;
 
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
-  createVideoContainer(span, video, videoContainer);
-  let totalUsers = document.getElementsByClassName("video-container").length;
-  console.log(totalUsers);
-  let count = totalUsers;
-  if (totalUsers > 1 && totalUsers < 7) count = 3;
-  // if (totalUsers > 6 && totalUsers < 9) count = 4;
-  // if (totalUsers > 8 && totalUsers < 11) count = 5;
-  if (totalUsers > 10) count = 6;
-  for (let index = 0; index < totalUsers; index++) {
-    if (totalUsers == 1) {
-      document.getElementsByClassName("video-container")[0].style.width = "50%";
-    } else {
-      document.getElementsByClassName("video-container")[index].style.width =
-        (100 - count * 2) / count + "%";
-      console.log(100 / count);
+  console.log("before create video stream");
+  // createVideoContainer(check, id, span, video, videoContainer);
+  socket.emit("getInfo", check, id, socket.id);
+  socket.once("recieveInfo", (name, profile) => {
+    console.log("========Inside receive Info===========");
+    console.log(name);
+    span.innerHTML = name;
+    span.classList.add("videofooter");
+    videoContainer.append(span);
+    videoContainer.classList.add("video-container");
+    videoContainer.append(video);
+    videoGrid.append(videoContainer);
+    let totalUsers = document.getElementsByClassName("video-container").length;
+    console.log(totalUsers);
+    let count = totalUsers;
+    if (totalUsers > 1 && totalUsers < 7) count = 3;
+    // if (totalUsers > 6 && totalUsers < 9) count = 4;
+    // if (totalUsers > 8 && totalUsers < 11) count = 5;
+    if (totalUsers > 10) count = 6;
+    for (let index = 0; index < totalUsers; index++) {
+      if (totalUsers == 1) {
+        document.getElementsByClassName("video-container")[0].style.width =
+          "50%";
+      } else {
+        document.getElementsByClassName("video-container")[index].style.width =
+          (100 - count * 2) / count + "%";
+        console.log(100 / count);
+      }
     }
-  }
+  });
+  console.log("after create video stream");
 };
 
-const createVideoContainer = (span, video, videoContainer) => {
-  span.innerHTML = Name;
-  span.classList.add("videofooter");
-  videoContainer.append(span);
-  videoContainer.classList.add("video-container");
-  videoContainer.append(video);
-  videoGrid.append(videoContainer);
-};
+const createVideoContainer = (check, id, span, video, videoContainer) => {};
 
 let text = $("input");
 $("html").keydown((e) => {
