@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARK Chat</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <!-- font awesome -->
+    <script
+      src="https://kit.fontawesome.com/d5ebe584cd.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- main navbar -->
+    <div class="topnav" id="myTopnav">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        "
+      >
+        <div style="display: flex; align-items: center; padding-left: 15px">
+          <img class="logo" src="/img/logo.svg" />
+        </div>
+        <div class="dropdown">
+          <div class="dropbtn">
+            <img src="<%=Picture%>" alt="Avatar" class="avatar" />
+            <!-- <i style="color: black" class="fa fa-caret-down"></i> -->
+          </div>
+          <div class="dropdown-content">
+            <a class="dropdown-info" href="#"><%=Name%></a>
+            <a class="dropdown-info" href="#"><%=Email%></a>
+            <div class="divider"></div>
+            <form
+              class="dropdown-info-logout"
+              action="/logout?_method=DELETE"
+              method="POST"
+            >
+              <button class="dropdown-info-logout-btn" type="submit">
+                SIGN OUT
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- <a href="javascript:void(0);" class="icon" onclick="myFunction()"
+        >&#9776;</a
+      > -->
+    </div>
+  </body>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+        x.className += " responsive";
+      } else {
+        x.className = "topnav";
+      }
+    }
+  </script>
+</html>

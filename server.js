@@ -52,6 +52,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
 
+//This passes the req.user to every route no need to manually write currentUser:req.user in each route
+app.use(function (req, res, next) {
+  res.locals.Name = req.user?.displayName
+    ? req.user.displayName
+    : req.user?.name;
+  res.locals.Email = req.user?.email ? req.user?.email : req.user?._json?.email;
+  res.locals.Picture = req.user?._json?.picture;
+  next();
+});
+
 //Routes
 app.use(authRoutes);
 app.use(googleAuthRoutes);
@@ -66,7 +76,7 @@ io.on("connection", (socket) => {
   socket.on("join-room", (peerId, RoomId, Name, Email, Picture) => {
     const user = userJoin(socket.id, peerId, RoomId, Name, Email, Picture);
     socket.join(user.roomId);
-    socket.broadcast.to(user.roomId).emit("user-connected", user.peerId);
+    socket.to(user.roomId).emit("user-connected", user.peerId);
     // messages
     socket.on("message", (message) => {
       //send message to the same room
@@ -86,6 +96,7 @@ io.on("connection", (socket) => {
         user = getCurrentUser(socket.id, true);
       }
       console.log(user);
+      console.log(check);
       console.log(socket.id);
       console.log(socketid);
       console.log("===============End Getting Info=========");

@@ -8,6 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/dashboard", isLoggedIn, (req, res) => {
+  console.log(req.user);
   res.render("dashboard");
 });
 router.get("/meeting/:meetingId", isLoggedIn, (req, res) => {
@@ -15,8 +16,8 @@ router.get("/meeting/:meetingId", isLoggedIn, (req, res) => {
     roomId: req.params.meetingId,
     // id: req.user?.id ? req.user.id : req.user._id,
     name: req.user?.displayName ? req.user.displayName : req.user?.name,
-    email: req.user?.email,
-    picture: req.user?.picture,
+    email: req.user?.email ? req.user?.email : req.user?._json?.email,
+    picture: req.user?._json?.picture,
   });
 });
 

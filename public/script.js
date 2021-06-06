@@ -1,7 +1,7 @@
 var socket = io.connect("/");
 const videoGrid = document.getElementById("video-grid");
 var peer = new Peer();
-
+let setmyvideo = false;
 let myVideoStream;
 
 const myVideo = document.createElement("video");
@@ -20,6 +20,7 @@ navigator.mediaDevices
   .then((stream) => {
     myVideoStream = stream;
     console.log("=======Add video Stream 1=============");
+    setmyvideo = false;
     addVideoStream(true, socket.id, span, myVideo, videoContainer, stream);
     console.log("printing(own SocketId):" + socket.id);
     peer.on("call", (call) => {
@@ -28,7 +29,6 @@ navigator.mediaDevices
       const video = document.createElement("video");
       const uservideoContainer = document.createElement("div");
       const userspan = document.createElement("span");
-
       call.on("stream", (userVideoStream) => {
         console.log("=======Add video Stream 2=============");
         console.log("printing(peerId):" + call.peer);
