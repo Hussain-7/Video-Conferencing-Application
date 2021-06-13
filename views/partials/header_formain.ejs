@@ -36,7 +36,11 @@
         </div>
         <div class="dropdown">
           <div class="dropbtn">
+            <%if(Picture){%>
             <img src="<%=Picture%>" alt="Avatar" class="avatar" />
+            <%}else{%>
+            <img src="avatar.png" alt="Avatar" class="avatar" />
+            <%}%>
             <!-- <i style="color: black" class="fa fa-caret-down"></i> -->
           </div>
           <div class="dropdown-content">
