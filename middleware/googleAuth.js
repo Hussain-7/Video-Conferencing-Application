@@ -26,6 +26,7 @@ passport.use(
         "181327876688-8i03i1r6qh28habe10v023sht8qsdu4v.apps.googleusercontent.com",
       clientSecret: "cA5BGv9yeofNzWM7hZNdffcb",
       callbackURL: `/google/callback`,
+      _scheme: "https",
     },
     function (accessToken, refreshToken, profile, done) {
       /*
