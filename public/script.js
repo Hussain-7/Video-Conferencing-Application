@@ -229,3 +229,4 @@ function closeChat() {
   document.getElementById("chat__container").style.display = "none";
   document.getElementById("closebtn").style.display = "none";
 }
+

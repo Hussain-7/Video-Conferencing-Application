@@ -11,14 +11,15 @@
         Generate new Meeting Id
       </button>
       <div id="inputdashboard">
-        <input class="form-input" type="text" id="roomName" />
-        <button
-          id="joinRoom"
-          class="pulse"
-          onclick="{window.location.href = '/meeting/' + document.getElementById('roomName').value}"
-        >
+        <input
+          onchange="joinMeeting()"
+          class="form-input"
+          type="text"
+          id="roomName"
+        />
+        <a id="joinRoom" class="pulse" href="http://localhost:3030/dashboard">
           Join
-        </button>
+        </a>
       </div>
       <button id="copy" onclick="copy()" class="newRoom">
         Copy Meeting Id
@@ -34,6 +35,12 @@
   </div>
 </div>
 <script>
+  const url = "";
+  function joinMeeting() {
+    document.getElementById("joinRoom").href =
+      "http://localhost:3030/meeting/" +
+      document.getElementById("roomName").value;
+  }
   function generateUUID() {
     // Public Domain/MIT
     var d = new Date().getTime(); //Timestamp
@@ -57,6 +64,9 @@
   }
   function createMeatingId() {
     document.getElementById("roomName").value = generateUUID();
+    document.getElementById("joinRoom").href =
+      "http://localhost:3030/meeting/" +
+      document.getElementById("roomName").value;
   }
   function copy() {
     /* Get the text field */
