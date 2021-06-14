@@ -47,10 +47,7 @@ navigator.mediaDevices
       connectToNewUser(userId, stream);
     });
     socket.on("createMessage", (message) => {
-      let chatlist = $(".messages");
-      chatlist.append(
-        `<li class="message"><b>${message.name} : </b>${message.text} - ${message.time}</li>`
-      );
+      outputMessage(message);
       scrollToBottom();
     });
   });
@@ -124,7 +121,24 @@ const addVideoStream = (check, id, span, video, videoContainer, stream) => {
   console.log("after create video stream");
 };
 
-const createVideoContainer = (check, id, span, video, videoContainer) => {};
+function outputMessage(message) {
+  // let chatlist = $(".messages");
+  // chatlist.append(
+  //   `<li class="message"><b>${message.name} : </b>${message.text} - ${message.time}</li>`
+  // );
+  const div = document.createElement("div");
+  div.classList.add("message");
+  const p = document.createElement("p");
+  p.classList.add("meta");
+  p.innerText = message.name;
+  p.innerHTML += ` <span>${message.time}</span>`;
+  div.appendChild(p);
+  const para = document.createElement("p");
+  para.classList.add("text");
+  para.innerText = message.text;
+  div.appendChild(para);
+  document.querySelector(".messages").appendChild(div);
+}
 
 let text = $("input");
 $("html").keydown((e) => {
@@ -197,11 +211,14 @@ const setPlayVideo = () => {
   `;
   document.querySelector(".main__video_button").innerHTML = html;
 };
-
 function openChat() {
-  console.log($(window).innerWidth());
-  document.getElementById("chat__container").style.width = "20%";
-  document.getElementById("videoChatContainer").style.width = "80%";
+  if ($(window).width() > 1500) {
+    document.getElementById("chat__container").style.width = "20%";
+    document.getElementById("videoChatContainer").style.width = "80%";
+  } else {
+    document.getElementById("chat__container").style.width = "40%";
+    document.getElementById("videoChatContainer").style.width = "60%";
+  }
   document.getElementById("chat__container").style.display = "flex";
   document.getElementById("closebtn").style.display = "block";
 }
