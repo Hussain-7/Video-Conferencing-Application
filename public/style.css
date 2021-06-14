@@ -934,3 +934,7 @@ div.app__right {
   display: flex !important;
   justify-content: space-between !important;
 }
+#chatheading {
+  font-size: 17px;
+  font-weight: bold;
+}
