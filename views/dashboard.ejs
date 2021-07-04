@@ -65,7 +65,7 @@
   function createMeatingId() {
     document.getElementById("roomName").value = generateUUID();
     document.getElementById("joinRoom").href =
-      "http://localhost:3030/meeting/" +
+      "https://zoom-webapp-clone.herokuapp.com/meeting" +
       document.getElementById("roomName").value;
   }
   function copy() {
