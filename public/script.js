@@ -19,10 +19,8 @@ navigator.mediaDevices
   })
   .then((stream) => {
     myVideoStream = stream;
-    console.log("=======Add video Stream 1=============");
     setmyvideo = false;
     addVideoStream(true, socket.id, span, myVideo, videoContainer, stream);
-    console.log("printing(own SocketId):" + socket.id);
     peer.on("call", (call) => {
       console.log(call);
       call.answer(stream);
@@ -30,8 +28,6 @@ navigator.mediaDevices
       const uservideoContainer = document.createElement("div");
       const userspan = document.createElement("span");
       call.on("stream", (userVideoStream) => {
-        console.log("=======Add video Stream 2=============");
-        console.log("printing(peerId):" + call.peer);
         addVideoStream(
           false,
           call.peer,
@@ -70,8 +66,6 @@ const connectToNewUser = (userId, stream) => {
   const span = document.createElement("span");
 
   call.on("stream", (userVideoStream) => {
-    console.log("=======Add video Stream 3=============");
-    console.log("printing(peerId):" + userId);
     addVideoStream(false, userId, span, video, videoContainer, userVideoStream);
   });
   call.on("close", () => {
@@ -229,4 +223,3 @@ function closeChat() {
   document.getElementById("chat__container").style.display = "none";
   document.getElementById("closebtn").style.display = "none";
 }
-
